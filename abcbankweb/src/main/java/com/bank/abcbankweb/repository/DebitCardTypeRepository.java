@@ -1,4 +1,8 @@
 package com.bank.abcbankweb.repository;
 
-public interface DebitCardTypeRepository {
+import com.bank.abcbankweb.entity.DebitCardType;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface DebitCardTypeRepository
+        extends JpaRepository<DebitCardType, Integer> {
 }

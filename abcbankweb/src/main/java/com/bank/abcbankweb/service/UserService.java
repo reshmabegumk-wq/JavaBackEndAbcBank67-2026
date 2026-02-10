@@ -1,17 +1,18 @@
 package com.bank.abcbankweb.service;
 
-import com.bank.abcbankweb.dto.LoginDTO;
 import com.bank.abcbankweb.dto.UserDTO;
-
-import java.util.List;
+import com.bank.abcbankweb.response.ApiResponse;
+import com.bank.abcbankweb.response.LoginResponse;
 
 public interface UserService {
 
-    String saveUser(UserDTO dto);
+    ApiResponse saveUser(UserDTO dto);
 
-    List<UserDTO> getAllUsers();
+    ApiResponse getAllUsers();
 
-    UserDTO getUserById(Integer id);
+    ApiResponse getUserById(Integer id);
 
-    LoginDTO login(String userName, String password);
+    ApiResponse updateUser(Integer id, UserDTO dto);
+
+    LoginResponse login(String email, String password);
 }

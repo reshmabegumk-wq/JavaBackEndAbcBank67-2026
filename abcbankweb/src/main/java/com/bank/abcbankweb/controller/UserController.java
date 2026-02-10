@@ -2,11 +2,12 @@ package com.bank.abcbankweb.controller;
 
 import com.bank.abcbankweb.dto.LoginDTO;
 import com.bank.abcbankweb.dto.UserDTO;
+import com.bank.abcbankweb.response.ApiResponse;
+import com.bank.abcbankweb.response.LoginResponse;
 import com.bank.abcbankweb.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -17,34 +18,38 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/save")
-    public String saveUser(@RequestBody UserDTO dto) {
+    public ApiResponse saveUser(
+            @Valid @RequestBody UserDTO dto) {
+
         return userService.saveUser(dto);
     }
 
-    @GetMapping("/all")
-    public List<UserDTO> getAllUsers() {
+    @GetMapping("/getAll")
+    public ApiResponse getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{id}")
-    public UserDTO getUserById(@PathVariable Integer id) {
+    @GetMapping("/getById/{id}")
+    public ApiResponse getUserById(
+            @PathVariable Integer id) {
+
         return userService.getUserById(id);
     }
 
-//    @PostMapping("/login")
-//    public String login(@RequestBody LoginDTO dto) {
-//        userService.login(dto.getUserName(), dto.getPassword());
-//        return "Login successful";
-//    }
+    @PutMapping("/update/{id}")
+    public ApiResponse updateUser(
+            @PathVariable Integer id,
+            @RequestBody UserDTO dto) {
 
-    @PostMapping("/login")
-    public LoginDTO login(@RequestBody LoginDTO dto) {
-        return userService.login(dto.getEmail(), dto.getPassword());
+        return userService.updateUser(id, dto);
     }
 
+    @PostMapping("/login")
+    public LoginResponse login(
+            @RequestBody LoginDTO dto) {
 
-//    @GetMapping("/loginById/{id}")
-//    public UserDTO loginById(@PathVariable Integer id) {
-//        return userService.getUserById(id);
-//    }
+        return userService.login(
+                dto.getEmail(),
+                dto.getPassword());
+    }
 }

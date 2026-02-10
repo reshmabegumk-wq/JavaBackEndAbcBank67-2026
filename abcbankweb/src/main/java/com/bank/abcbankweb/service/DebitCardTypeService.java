@@ -1,4 +1,10 @@
 package com.bank.abcbankweb.service;
 
-public interface DebitCardTypeSevice {
+import com.bank.abcbankweb.response.ApiResponse;
+
+public interface DebitCardTypeService {
+
+    ApiResponse getAllDebitCardTypes();
+
+    ApiResponse getDebitCardTypeById(Integer id);
 }

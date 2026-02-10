@@ -1,86 +1,49 @@
 package com.bank.abcbankweb.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "account")
+@Data
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "account_number")
     private Long accountNumber;
 
-    private String accountType;
+    @NotNull(message = "Account balance cannot be null")
+    @Column(name = "account_balance")
+    private double accountBalance;
 
-    private double balance;
+    @NotNull(message = "Average amount cannot be null")
+    @Column(name = "average_amount")
+    private double averageAmount;
 
-    private double averageBalance;
-
-    private Integer approvedBy;
-
+    @NotNull(message = "Opened date cannot be null")
+    @Column(name = "opened_date")
     private LocalDate openedDate;
 
-    // 🔗 Proper relationship mapping
+    @NotBlank(message = "Account type cannot be null")
+    @Column(name = "account_type")
+    private String accountType;
+
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private User user;
+    @JoinColumn(
+            name = "customer_id",
+            referencedColumnName = "user_id"
+    )
+    private User customer;
 
-    // ===== Getters and Setters =====
-
-    public Long getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(Long accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public double getAverageBalance() {
-        return averageBalance;
-    }
-
-    public void setAverageBalance(double averageBalance) {
-        this.averageBalance = averageBalance;
-    }
-
-    public Integer getApprovedBy() {
-        return approvedBy;
-    }
-
-    public void setApprovedBy(Integer approvedBy) {
-        this.approvedBy = approvedBy;
-    }
-
-    public LocalDate getOpenedDate() {
-        return openedDate;
-    }
-
-    public void setOpenedDate(LocalDate openedDate) {
-        this.openedDate = openedDate;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    @ManyToOne
+    @JoinColumn(
+            name = "approved_by",
+            referencedColumnName = "user_id"
+    )
+    private User approvedBy;
 }
