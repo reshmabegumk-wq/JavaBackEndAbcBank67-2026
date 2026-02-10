@@ -31,13 +31,20 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+//    @PostMapping("/login")
+//    public String login(@RequestBody LoginDTO dto) {
+//        userService.login(dto.getUserName(), dto.getPassword());
+//        return "Login successful";
+//    }
+
     @PostMapping("/login")
-    public String login(@RequestBody LoginDTO dto) {
-        userService.login(dto.getUserName(), dto.getPassword());
-        return "Login successful";
+    public LoginDTO login(@RequestBody LoginDTO dto) {
+        return userService.login(dto.getEmail(), dto.getPassword());
     }
-    @GetMapping("/loginById/{id}")
-    public UserDTO loginById(@PathVariable Integer id) {
-        return userService.getUserById(id);
-    }
+
+
+//    @GetMapping("/loginById/{id}")
+//    public UserDTO loginById(@PathVariable Integer id) {
+//        return userService.getUserById(id);
+//    }
 }

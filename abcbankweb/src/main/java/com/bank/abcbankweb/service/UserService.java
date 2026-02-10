@@ -1,5 +1,6 @@
 package com.bank.abcbankweb.service;
 
+import com.bank.abcbankweb.dto.LoginDTO;
 import com.bank.abcbankweb.dto.UserDTO;
 
 import java.util.List;
@@ -12,5 +13,5 @@ public interface UserService {
 
     UserDTO getUserById(Integer id);
 
-    UserDTO login(String userName, String password);
+    LoginDTO login(String userName, String password);
 }

@@ -1,5 +1,6 @@
 package com.bank.abcbankweb.serviceImpl;
 
+import com.bank.abcbankweb.dto.LoginDTO;
 import com.bank.abcbankweb.dto.UserDTO;
 import com.bank.abcbankweb.entity.*;
 import com.bank.abcbankweb.repository.*;
@@ -69,16 +70,37 @@ public class userServiceImpl implements UserService {
         return mapToDTO(user);
     }
 
+//    @Override
+//    public UserDTO login(String userName, String password) {
+//
+//        User user = userRepository
+//                .findByUserNameAndPassword(userName, password)
+//                .orElseThrow(() ->
+//                        new RuntimeException("Invalid Username or Password"));
+//
+//        return mapToDTO(user);
+//    }
+
     @Override
-    public UserDTO login(String userName, String password) {
+    public LoginDTO login(String email, String password) {
 
-        User user = userRepository
-                .findByUserNameAndPassword(userName, password)
-                .orElseThrow(() ->
-                        new RuntimeException("Invalid Username or Password"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return mapToDTO(user);
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        return new LoginDTO(
+                user.getEmail(),     // email
+                null,                // password not returned
+                "Login successful",  // message
+                user.getRole().getRoleId()
+        );
     }
+
+
+
 
 
     private UserDTO mapToDTO(User u) {
