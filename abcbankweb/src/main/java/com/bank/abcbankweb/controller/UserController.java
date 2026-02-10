@@ -32,8 +32,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public UserDTO login(@RequestBody LoginDTO dto) {
-        return userService.login(dto.getUserName(), dto.getPassword());
+    public String login(@RequestBody LoginDTO dto) {
+        userService.login(dto.getUserName(), dto.getPassword());
+        return "Login successful";
+    }
+    @GetMapping("/loginById/{id}")
+    public UserDTO loginById(@PathVariable Integer id) {
+        return userService.getUserById(id);
     }
 }
-
