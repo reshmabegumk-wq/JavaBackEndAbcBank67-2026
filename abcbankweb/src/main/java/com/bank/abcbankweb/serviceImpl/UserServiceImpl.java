@@ -138,24 +138,65 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    @Override
-    public LoginResponse login(String email,
-                               String password) {
 
-        User user = userRepository
-                .findByEmail(email)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Invalid Email"));
+
+    @Override
+    public LoginResponse login(String email, String password) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Invalid Email"));
 
         if (!user.getPassword().equals(password)) {
-            throw new RuntimeException(
-                    "Invalid Password");
+            throw new RuntimeException("Invalid Password");
         }
+
+        String fullName = buildFullName(
+                user.getFirstName(),
+                user.getLastName()
+        );
 
         return new LoginResponse(
                 "Login Successful",
-                user.getRole().getRoleId()
+                user.getRole().getRoleId(),
+                fullName
         );
     }
+
+    private String buildFullName(String firstName, String lastName) {
+
+        if (firstName == null && lastName == null) {
+            return null; // or "" based on frontend need
+        }
+
+        if (firstName == null) {
+            return lastName;
+        }
+
+        if (lastName == null) {
+            return firstName;
+        }
+
+        return firstName + " " + lastName;
+    }
+
+
+
+//    @Override
+//    public LoginResponse login(String email,
+//                               String password) {
+//
+//        User user = userRepository.findByEmail(email).orElseThrow(() ->
+//                        new RuntimeException("Invalid Email"));
+//
+//        if (!user.getPassword().equals(password)) {
+//            throw new RuntimeException(
+//                    "Invalid Password");
+//        }
+//
+//        return new LoginResponse(
+//                "Login Successful",
+//                user.getRole().getRoleId()
+//
+//        );
+//    }
 }
