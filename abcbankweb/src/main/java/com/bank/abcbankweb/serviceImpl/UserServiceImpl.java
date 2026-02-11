@@ -42,54 +42,34 @@ public class UserServiceImpl implements UserService {
         u.setUserName(dto.getUserName());
         u.setPassword(dto.getPassword());
 
-        Role role =
-                roleRepository.findById(dto.getRoleId())
-                        .orElse(null);
-
+        Role role = roleRepository.findById(dto.getRoleId()).orElse(null);
         u.setRole(role);
 
         repo.save(u);
 
-        return new ApiResponse(
-                "User saved successfully",
-                u
-        );
+        return new ApiResponse("User saved successfully", u);
     }
 
     @Override
     public ApiResponse getAllUsers() {
-
         List<User> list = repo.findAll();
 
         if (list.isEmpty()) {
-            return new ApiResponse(
-                    "No users found",
-                    null
-            );
+            return new ApiResponse("No users found", null);
         }
 
-        return new ApiResponse(
-                "Users fetched successfully",
-                list
-        );
+        return new ApiResponse("Users fetched successfully", list);
     }
 
     @Override
     public ApiResponse getUserById(Integer id) {
-
         User u = repo.findById(id).orElse(null);
 
         if (u == null) {
-            return new ApiResponse(
-                    "User not found",
-                    null
-            );
+            return new ApiResponse("User not found", null);
         }
 
-        return new ApiResponse(
-                "User fetched successfully",
-                u
-        );
+        return new ApiResponse("User fetched successfully", u);
     }
 
     @Override
@@ -98,10 +78,7 @@ public class UserServiceImpl implements UserService {
         User u = repo.findById(id).orElse(null);
 
         if (u == null) {
-            return new ApiResponse(
-                    "User not found",
-                    null
-            );
+            return new ApiResponse("User not found", null);
         }
 
         u.setFirstName(dto.getFirstName());
@@ -118,32 +95,23 @@ public class UserServiceImpl implements UserService {
         u.setPanCard(dto.getPanCard());
         u.setAadhar(dto.getAadhar());
 
-        Role role =
-                roleRepository.findById(dto.getRoleId())
-                        .orElse(null);
-
+        Role role = roleRepository.findById(dto.getRoleId()).orElse(null);
         u.setRole(role);
 
         repo.save(u);
 
-        return new ApiResponse(
-                "User updated successfully",
-                u
-        );
+        return new ApiResponse("User updated successfully", u);
     }
 
     @Override
     public LoginResponse login(LoginDTO dto) {
 
-        User u =
-                repo.findByUserNameAndPassword(
-                                dto.getUserName(),
-                                dto.getPassword())
-                        .orElse(null);
+        User u = repo.findByEmailAndPassword(dto.getUserName(), dto.getPassword())
+                .orElse(null);
 
         if (u == null) {
             return new LoginResponse(
-                    "Invalid username or password",
+                    "Invalid email or password",
                     null,
                     "FAILED"
             );

@@ -61,7 +61,7 @@ public class User {
     private String pincode;
 
     @NotBlank(message = "PAN card is required")
-    @Column(name = "pan_card", length = 14, nullable = false, unique = true)
+    @Column(name = "pancard", length = 14, nullable = false, unique = true)
     private String panCard;
 
     @NotBlank(message = "Aadhar number is required")
