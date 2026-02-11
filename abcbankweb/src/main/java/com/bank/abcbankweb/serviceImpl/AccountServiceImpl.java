@@ -24,21 +24,13 @@ public class AccountServiceImpl implements AccountService {
     public ApiResponse createAccount(AccountDTO dto) {
 
         if (accountRepository.existsById(dto.getAccountNumber())) {
-            return new ApiResponse(
-                    "Account number already exists",
-                    null
-            );
+            return new ApiResponse("Account number already exists", null);
         }
 
         Account account = new Account();
-
         account.setAccountNumber(dto.getAccountNumber());
         account.setBalance(dto.getBalance());
-        account.setOpenedDate(
-                dto.getOpenedDate() != null
-                        ? dto.getOpenedDate()
-                        : LocalDate.now()
-        );
+        account.setOpenedDate(dto.getOpenedDate() != null ? dto.getOpenedDate() : LocalDate.now());
         account.setStatus(dto.getStatus());
         account.setBranchName(dto.getBranchName());
         account.setBranchCode(dto.getBranchCode());
@@ -55,10 +47,7 @@ public class AccountServiceImpl implements AccountService {
 
         accountRepository.save(account);
 
-        return new ApiResponse(
-                "Account created successfully",
-                account
-        );
+        return new ApiResponse("Account created successfully", account);
     }
 
     @Override
@@ -67,34 +56,21 @@ public class AccountServiceImpl implements AccountService {
         List<Account> accounts = accountRepository.findAll();
 
         if (accounts.isEmpty()) {
-            return new ApiResponse(
-                    "No accounts found",
-                    null
-            );
+            return new ApiResponse("No accounts found", null);
         }
 
-        return new ApiResponse(
-                "Accounts fetched successfully",
-                accounts
-        );
+        return new ApiResponse("Accounts fetched successfully", accounts);
     }
 
     @Override
     public ApiResponse getAccountByNumber(Long accountNumber) {
 
-        Optional<Account> optional =
-                accountRepository.findById(accountNumber);
+        Optional<Account> optional = accountRepository.findById(accountNumber);
 
         if (optional.isEmpty()) {
-            return new ApiResponse(
-                    "Account not found",
-                    null
-            );
+            return new ApiResponse("Account not found", null);
         }
 
-        return new ApiResponse(
-                "Account fetched successfully",
-                optional.get()
-        );
+        return new ApiResponse("Account fetched successfully", optional.get());
     }
 }

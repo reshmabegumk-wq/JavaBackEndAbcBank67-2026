@@ -23,7 +23,7 @@ public class TransactionController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/getAll")
     public ResponseEntity<ApiResponse> getAllTransactions() {
         ApiResponse response = transactionService.getAllTransactions();
         return new ResponseEntity<>(response, HttpStatus.OK);
