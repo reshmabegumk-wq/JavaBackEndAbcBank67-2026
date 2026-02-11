@@ -5,20 +5,22 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Entity
-@Table(name = "role")
+@Table(name = "card_type")
 @Data
-public class Role {
+public class CardType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id", nullable = false)
-    private Integer roleId;
+    @Column(
+            name = "card_type_id",
+            nullable = false)
+    private Integer cardTypeId;
 
     @NotBlank
     @Column(
-            name = "role_name",
-            length = 20,
+            name = "card_type_name",
+            length = 10,
             nullable = false,
             unique = true)
-    private String roleName;
+    private String cardTypeName;
 }

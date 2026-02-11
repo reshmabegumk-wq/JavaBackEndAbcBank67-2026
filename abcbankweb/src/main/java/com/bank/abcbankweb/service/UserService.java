@@ -1,5 +1,6 @@
 package com.bank.abcbankweb.service;
 
+import com.bank.abcbankweb.dto.LoginDTO;
 import com.bank.abcbankweb.dto.UserDTO;
 import com.bank.abcbankweb.response.ApiResponse;
 import com.bank.abcbankweb.response.LoginResponse;
@@ -14,5 +15,5 @@ public interface UserService {
 
     ApiResponse updateUser(Integer id, UserDTO dto);
 
-    LoginResponse login(String email, String password);
+    LoginResponse login(LoginDTO dto);
 }

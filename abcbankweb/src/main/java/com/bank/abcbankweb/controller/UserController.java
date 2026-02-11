@@ -15,41 +15,35 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 public class UserController {
 
-    private final UserService userService;
+    private final UserService service;
 
     @PostMapping("/save")
-    public ApiResponse saveUser(
+    public ApiResponse save(
             @Valid @RequestBody UserDTO dto) {
-
-        return userService.saveUser(dto);
+        return service.saveUser(dto);
     }
 
     @GetMapping("/getAll")
-    public ApiResponse getAllUsers() {
-        return userService.getAllUsers();
+    public ApiResponse getAll() {
+        return service.getAllUsers();
     }
 
-    @GetMapping("/getById/{id}")
-    public ApiResponse getUserById(
+    @GetMapping("/getById{id}")
+    public ApiResponse getById(
             @PathVariable Integer id) {
-
-        return userService.getUserById(id);
+        return service.getUserById(id);
     }
 
     @PutMapping("/update/{id}")
-    public ApiResponse updateUser(
+    public ApiResponse update(
             @PathVariable Integer id,
-            @RequestBody UserDTO dto) {
-
-        return userService.updateUser(id, dto);
+            @Valid @RequestBody UserDTO dto) {
+        return service.updateUser(id, dto);
     }
 
     @PostMapping("/login")
     public LoginResponse login(
-            @RequestBody LoginDTO dto) {
-
-        return userService.login(
-                dto.getEmail(),
-                dto.getPassword());
+            @Valid @RequestBody LoginDTO dto) {
+        return service.login(dto);
     }
 }
