@@ -6,51 +6,41 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+@Data
 @Entity
 @Table(name = "account")
-@Data
 public class Account {
 
     @Id
     @Column(name = "account_number")
     private Long accountNumber;
 
-    @NotNull(message = "Balance cannot be null")
-    @PositiveOrZero(message = "Balance must be zero or positive")
-    @Column(name = "balance", nullable = false)
+    @Column(name = "balance")
     private Double balance;
 
-    @NotNull(message = "Account opened date is required")
-    @Column(name = "opened_date", nullable = false)
+    @Column(name = "opened_date")
     private LocalDate openedDate;
 
-    @NotBlank(message = "Account status is required")
-    @Column(name = "status", length = 10, nullable = false)
+    @Column(name = "status", length = 10)
     private String status;
 
-    @NotBlank(message = "Branch name is required")
-    @Column(name = "branch_name", length = 45, nullable = false)
+    @Column(name = "branch_name", length = 45)
     private String branchName;
 
-    @NotBlank(message = "Branch code is required")
-    @Column(name = "branch_code", length = 25, nullable = false)
+    @Column(name = "branch_code", length = 25)
     private String branchCode;
 
-    @NotBlank(message = "City is required")
-    @Column(name = "city", length = 45, nullable = false)
+    @Column(name = "city", length = 45)
     private String city;
 
-    @NotBlank(message = "State is required")
-    @Column(name = "state", length = 45, nullable = false)
+    @Column(name = "state", length = 45)
     private String state;
 
-    @NotNull(message = "Account type is required")
-    @ManyToOne
-    @JoinColumn(name = "account_type_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_type_id")
     private AccountType accountType;
 
-    @NotNull(message = "Customer is required")
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private User customer;
 }

@@ -1,9 +1,12 @@
 package com.bank.abcbankweb.serviceImpl;
 
-import com.bank.abcbankweb.dto.LoginDTO;
-import com.bank.abcbankweb.dto.UserDTO;
+import com.bank.abcbankweb.dto.*;
+import com.bank.abcbankweb.entity.Account;
+import com.bank.abcbankweb.entity.AccountType;
 import com.bank.abcbankweb.entity.Role;
 import com.bank.abcbankweb.entity.User;
+import com.bank.abcbankweb.repository.AccountRepository;
+import com.bank.abcbankweb.repository.AccountTypeRepository;
 import com.bank.abcbankweb.repository.RoleRepository;
 import com.bank.abcbankweb.repository.UserRepository;
 import com.bank.abcbankweb.response.ApiResponse;
@@ -11,116 +14,142 @@ import com.bank.abcbankweb.response.LoginResponse;
 import com.bank.abcbankweb.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository repo;
+    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
+    private final AccountTypeRepository accountTypeRepository;
 
-    @Override
-    public ApiResponse saveUser(UserDTO dto) {
+    @Transactional
+    public ApiResponse<User> createUserWithAccount(UserRequestDto request) {
 
-        User u = new User();
+        Role role = roleRepository.findById(request.getRoleId())
+                .orElseThrow(() -> new RuntimeException("Role not found"));
 
-        u.setFirstName(dto.getFirstName());
-        u.setLastName(dto.getLastName());
-        u.setMobileNumber(dto.getMobileNumber());
-        u.setAlternativeNumber(dto.getAlternativeNumber());
-        u.setEmail(dto.getEmail());
-        u.setDateOfBirth(dto.getDateOfBirth());
-        u.setAddress(dto.getAddress());
-        u.setCity(dto.getCity());
-        u.setState(dto.getState());
-        u.setCountry(dto.getCountry());
-        u.setPincode(dto.getPincode());
-        u.setPanCard(dto.getPanCard());
-        u.setAadhar(dto.getAadhar());
-        u.setUserName(dto.getUserName());
-        u.setPassword(dto.getPassword());
+        User user = new User();
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setMobileNumber(request.getMobileNumber());
+        user.setEmail(request.getEmail());
+        user.setDateOfBirth(request.getDateOfBirth());
+        user.setAddress(request.getAddress());
+        user.setCity(request.getCity());
+        user.setState(request.getState());
+        user.setCountry(request.getCountry());
+        user.setPincode(request.getPincode());
+        user.setPancard(request.getPancard());
+        user.setAadhar(request.getAadhar());
+        user.setPassword("abcbank@123");
+        user.setRole(role);
 
-        Role role = roleRepository.findById(dto.getRoleId()).orElse(null);
-        u.setRole(role);
+        user.setCreatedBy(1L);
+        user.setCreatedDate(LocalDateTime.now());
 
-        repo.save(u);
+        User savedUser = userRepository.save(user);
 
-        return new ApiResponse("User saved successfully", u);
+        AccountType accountType = accountTypeRepository.findById(request.getAccountTypeId())
+                .orElseThrow(() -> new RuntimeException("Account Type not found"));
+
+        Account account = new Account();
+        account.setAccountNumber(generateAccountNumber());
+        account.setBalance(request.getInitialBalance());
+        account.setOpenedDate(LocalDate.now());
+        account.setStatus("Active");
+        account.setBranchName(request.getBranchName());
+        account.setBranchCode(request.getBranchCode());
+        account.setCity(request.getCity());
+        account.setState(request.getState());
+        account.setAccountType(accountType);
+        account.setCustomer(savedUser);
+
+        accountRepository.save(account);
+
+        return new ApiResponse<>(
+                true,
+                "User Saved Successfully",null
+        );
     }
 
-    @Override
-    public ApiResponse getAllUsers() {
-        List<User> list = repo.findAll();
-
-        if (list.isEmpty()) {
-            return new ApiResponse("No users found", null);
-        }
-
-        return new ApiResponse("Users fetched successfully", list);
+    private Long generateAccountNumber() {
+        return 1000000000L + new Random().nextInt(900000000);
     }
 
-    @Override
-    public ApiResponse getUserById(Integer id) {
-        User u = repo.findById(id).orElse(null);
 
-        if (u == null) {
-            return new ApiResponse("User not found", null);
-        }
+    public ApiResponse<UserResponseDto> getUserById(Long userId) {
 
-        return new ApiResponse("User fetched successfully", u);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Account> accounts = accountRepository.findByCustomerUserId(userId);
+
+        UserResponseDto response = new UserResponseDto();
+        response.setUserId(user.getUserId());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setEmail(user.getEmail());
+        response.setMobileNumber(user.getMobileNumber());
+        response.setCity(user.getCity());
+        response.setState(user.getState());
+        response.setRoleName(user.getRole().getRoleName());
+
+        List<AccountResponseDto> accountDtos = accounts.stream().map(acc -> {
+            AccountResponseDto dto = new AccountResponseDto();
+            dto.setAccountNumber(acc.getAccountNumber());
+            dto.setBalance(acc.getBalance());
+            dto.setBranchName(acc.getBranchName());
+            dto.setBranchCode(acc.getBranchCode());
+            dto.setCity(acc.getCity());
+            dto.setState(acc.getState());
+            dto.setStatus(acc.getStatus());
+            return dto;
+        }).toList();
+
+        response.setAccounts(accountDtos);
+
+        return new ApiResponse<>(
+                true,
+                "User Fetched Successfully",
+                response
+        );
     }
 
-    @Override
-    public ApiResponse updateUser(Integer id, UserDTO dto) {
 
-        User u = repo.findById(id).orElse(null);
+    @Transactional
+    public ApiResponse<Void> updateUser(Long userId, UserRequestDto request) {
 
-        if (u == null) {
-            return new ApiResponse("User not found", null);
-        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setMobileNumber(request.getMobileNumber());
+        user.setEmail(request.getEmail());
+        user.setDateOfBirth(request.getDateOfBirth());
+        user.setAddress(request.getAddress());
+        user.setCity(request.getCity());
+        user.setState(request.getState());
+        user.setCountry(request.getCountry());
+        user.setPincode(request.getPincode());
+        user.setPancard(request.getPancard());
+        user.setAadhar(request.getAadhar());
+        user.setUpdatedBy(1L);
+        user.setUpdatedDate(LocalDateTime.now());
 
-        u.setFirstName(dto.getFirstName());
-        u.setLastName(dto.getLastName());
-        u.setMobileNumber(dto.getMobileNumber());
-        u.setAlternativeNumber(dto.getAlternativeNumber());
-        u.setEmail(dto.getEmail());
-        u.setDateOfBirth(dto.getDateOfBirth());
-        u.setAddress(dto.getAddress());
-        u.setCity(dto.getCity());
-        u.setState(dto.getState());
-        u.setCountry(dto.getCountry());
-        u.setPincode(dto.getPincode());
-        u.setPanCard(dto.getPanCard());
-        u.setAadhar(dto.getAadhar());
-
-        Role role = roleRepository.findById(dto.getRoleId()).orElse(null);
-        u.setRole(role);
-
-        repo.save(u);
-
-        return new ApiResponse("User updated successfully", u);
-    }
-
-    @Override
-    public LoginResponse login(LoginDTO dto) {
-
-        User u = repo.findByEmailAndPassword(dto.getUserName(), dto.getPassword())
-                .orElse(null);
-
-        if (u == null) {
-            return new LoginResponse(
-                    "Invalid email or password",
-                    null,
-                    "FAILED"
-            );
-        }
-
-        return new LoginResponse(
-                "Login successful",
-                u.getRole().getRoleId(),
-                "ACTIVE"
+        userRepository.save(user);
+        return new ApiResponse<>(
+                true,
+                "User Updated Successfully",
+                null
         );
     }
 }
+

@@ -4,80 +4,84 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "user_table")
 @Data
+@Entity
+@Table(name = "user")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @Column(name = "user_id")
+    private Long userId;
 
-    @NotBlank(message = "First name is required")
-    @Column(name = "first_name", length = 50, nullable = false)
+    @Column(name = "first_name", length = 50)
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
-    @Column(name = "last_name", length = 45, nullable = false)
+    @Column(name = "last_name", length = 45)
     private String lastName;
 
-    @NotBlank(message = "Mobile number is required")
-    @Column(name = "mobile_number", length = 12, nullable = false, unique = true)
+    @Column(name = "mobile_number", length = 12)
     private String mobileNumber;
 
     @Column(name = "alternative_number", length = 12)
     private String alternativeNumber;
 
-    @NotBlank(message = "Email is required")
-    @Column(name = "email", length = 65, nullable = false, unique = true)
+    @Column(name = "email", length = 65)
     private String email;
 
-    @NotNull(message = "Date of birth is required")
-    @Column(name = "date_of_birth", nullable = false)
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @NotBlank(message = "Address is required")
-    @Column(name = "address", length = 225, nullable = false)
+    @Column(name = "address", length = 225)
     private String address;
 
-    @NotBlank(message = "City is required")
-    @Column(name = "city", length = 30, nullable = false)
+    @Column(name = "city", length = 30)
     private String city;
 
-    @NotBlank(message = "State is required")
-    @Column(name = "state", length = 25, nullable = false)
+    @Column(name = "state", length = 25)
     private String state;
 
-    @NotBlank(message = "Country is required")
-    @Column(name = "country", length = 45, nullable = false)
+    @Column(name = "country", length = 45)
     private String country;
 
-    @NotBlank(message = "Pincode is required")
-    @Column(name = "pincode", length = 6, nullable = false)
+    @Column(name = "pincode", length = 6)
     private String pincode;
 
-    @NotBlank(message = "PAN card is required")
-    @Column(name = "pancard", length = 14, nullable = false, unique = true)
-    private String panCard;
+    @Column(name = "pancard", length = 14)
+    private String pancard;
 
-    @NotBlank(message = "Aadhar number is required")
-    @Column(name = "aadhar_number", length = 12, nullable = false, unique = true)
+    @Column(name = "aadhar", length = 12)
     private String aadhar;
 
-    @NotBlank(message = "Username is required")
-    @Column(name = "user_name", length = 35, nullable = false, unique = true)
-    private String userName;
-
-    @NotBlank(message = "Password is required")
-    @Column(name = "password", length = 120, nullable = false)
+    @Column(name = "password", length = 12)
     private String password;
 
-    @NotNull(message = "Role is required")
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
     private Role role;
+
+    @CreatedBy
+    @Column(name = "created_by", updatable = false)
+    private Long createdBy;
+
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedBy
+    @Column(name = "updated_by")
+    private Long updatedBy;
+
+    @LastModifiedDate
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
 }
+

@@ -2,13 +2,11 @@ package com.bank.abcbankweb.repository;
 
 import com.bank.abcbankweb.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface TransactionRepository
-        extends JpaRepository<Transaction, Integer> {
-
-    List<Transaction>
-    findByAccount_AccountNumberOrderByTransactionIdDesc(
-            Long accountNumber);
+@Repository
+public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+    List<Transaction> findByAccountAccountNumberOrderByDateOfTransactionDesc(Long accountNumber);
 }

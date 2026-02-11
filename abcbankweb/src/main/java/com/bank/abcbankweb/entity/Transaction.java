@@ -14,26 +14,21 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id")
-    private Integer transactionId;
+    private Long transactionId;
 
-    @NotNull(message = "Date of transaction is required")
     @Column(name = "date_of_transaction", nullable = false)
     private LocalDate dateOfTransaction;
 
-    @NotNull(message = "Closing balance is required")
     @Column(name = "closing_balance", nullable = false)
     private Double closingBalance;
 
-    @NotBlank(message = "Transaction type is required")
-    @Column(name = "transaction_type", nullable = false)
+    @Column(name = "transaction_type", nullable = false, length = 50)
     private String transactionType;
 
-    @NotNull(message = "Transaction amount is required")
     @Column(name = "transactioned_amount", nullable = false)
     private Double transactionedAmount;
 
-    @NotNull(message = "Account is required")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_number", nullable = false)
     private Account account;
 }

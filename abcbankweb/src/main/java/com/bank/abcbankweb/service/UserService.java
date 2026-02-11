@@ -1,19 +1,16 @@
 package com.bank.abcbankweb.service;
 
-import com.bank.abcbankweb.dto.LoginDTO;
-import com.bank.abcbankweb.dto.UserDTO;
+import com.bank.abcbankweb.dto.UserRequestDto;
+import com.bank.abcbankweb.dto.UserResponseDto;
+import com.bank.abcbankweb.entity.User;
 import com.bank.abcbankweb.response.ApiResponse;
-import com.bank.abcbankweb.response.LoginResponse;
 
 public interface UserService {
 
-    ApiResponse saveUser(UserDTO dto);
+    ApiResponse<User> createUserWithAccount(UserRequestDto request);
 
-    ApiResponse getAllUsers();
 
-    ApiResponse getUserById(Integer id);
+    ApiResponse<UserResponseDto> getUserById(Long userId);
 
-    ApiResponse updateUser(Integer id, UserDTO dto);
-
-    LoginResponse login(LoginDTO dto);
+    ApiResponse<Void> updateUser(Long userId, UserRequestDto request);
 }

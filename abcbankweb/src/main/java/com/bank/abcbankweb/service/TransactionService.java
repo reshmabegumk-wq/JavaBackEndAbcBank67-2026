@@ -1,13 +1,11 @@
 package com.bank.abcbankweb.service;
 
-import com.bank.abcbankweb.dto.TransactionDTO;
+import com.bank.abcbankweb.dto.TransactionResponseDto;
 import com.bank.abcbankweb.response.ApiResponse;
+
+import java.util.List;
 
 public interface TransactionService {
 
-    ApiResponse saveTransaction(TransactionDTO dto);
-
-    ApiResponse getAllTransactions();
-
-    ApiResponse getByAccountNumber(Long accountNumber);
+    ApiResponse<List<TransactionResponseDto>> getTransactionsByAccountNumber(Long accountNumber);
 }

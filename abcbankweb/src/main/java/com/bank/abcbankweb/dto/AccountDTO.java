@@ -8,9 +8,6 @@ import java.time.LocalDate;
 @Data
 public class AccountDTO {
 
-    @NotNull(message = "Account number is required")
-    private Long accountNumber;
-
     @NotNull(message = "Balance cannot be null")
     @PositiveOrZero(message = "Balance must be zero or positive")
     private Double balance;
@@ -37,5 +34,5 @@ public class AccountDTO {
     private Integer accountTypeId;
 
     @NotNull(message = "Customer ID is required")
-    private Integer customerId;
+    private Integer userId;
 }

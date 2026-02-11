@@ -1,49 +1,54 @@
 package com.bank.abcbankweb.controller;
 
-import com.bank.abcbankweb.dto.LoginDTO;
-import com.bank.abcbankweb.dto.UserDTO;
+import com.bank.abcbankweb.dto.LoginRequestDto;
+import com.bank.abcbankweb.dto.LoginResponseDto;
+import com.bank.abcbankweb.dto.UserRequestDto;
+import com.bank.abcbankweb.dto.UserResponseDto;
+import com.bank.abcbankweb.entity.User;
 import com.bank.abcbankweb.response.ApiResponse;
-import com.bank.abcbankweb.response.LoginResponse;
+import com.bank.abcbankweb.service.LoginService;
 import com.bank.abcbankweb.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class UserController {
 
-    private final UserService service;
+    private final UserService userService;
+    private final LoginService loginService;
 
     @PostMapping("/save")
-    public ApiResponse save(
-            @Valid @RequestBody UserDTO dto) {
-        return service.saveUser(dto);
+    public ResponseEntity<ApiResponse<User>> saveUser(
+            @RequestBody UserRequestDto request) {
+        return ResponseEntity.ok(userService.createUserWithAccount(request));
     }
 
-    @GetMapping("/getAll")
-    public ApiResponse getAll() {
-        return service.getAllUsers();
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<ApiResponse<UserResponseDto>> getUserById(
+            @PathVariable Long userId) {
+
+        return ResponseEntity.ok(userService.getUserById(userId));
     }
 
-    @GetMapping("/getById{id}")
-    public ApiResponse getById(
-            @PathVariable Integer id) {
-        return service.getUserById(id);
-    }
-
-    @PutMapping("/update/{id}")
-    public ApiResponse update(
-            @PathVariable Integer id,
-            @Valid @RequestBody UserDTO dto) {
-        return service.updateUser(id, dto);
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<ApiResponse<Void>> updateUser(
+            @PathVariable Long userId,
+            @RequestBody UserRequestDto request) {
+        return ResponseEntity.ok(userService.updateUser(userId, request));
     }
 
     @PostMapping("/login")
-    public LoginResponse login(
-            @Valid @RequestBody LoginDTO dto) {
-        return service.login(dto);
+    public ResponseEntity<ApiResponse<LoginResponseDto>> login(
+            @RequestBody LoginRequestDto request) {
+
+        return ResponseEntity.ok(loginService.login(request));
     }
+
+
 }
+
+

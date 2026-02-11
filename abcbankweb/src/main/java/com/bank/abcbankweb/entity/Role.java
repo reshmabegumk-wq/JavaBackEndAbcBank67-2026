@@ -4,21 +4,21 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.util.List;
+
+@Data
 @Entity
 @Table(name = "role")
-@Data
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id", nullable = false)
+    @Column(name = "role_id")
     private Integer roleId;
 
-    @NotBlank
-    @Column(
-            name = "role_name",
-            length = 20,
-            nullable = false,
-            unique = true)
+    @Column(name = "role_name", length = 50)
     private String roleName;
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<User> users;
 }

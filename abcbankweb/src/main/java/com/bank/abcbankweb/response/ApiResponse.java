@@ -2,11 +2,14 @@ package com.bank.abcbankweb.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class ApiResponse {
+@NoArgsConstructor
+public class ApiResponse<T> {
 
+    private boolean status;
     private String message;
-    private Object data;
+    private T data;
 }

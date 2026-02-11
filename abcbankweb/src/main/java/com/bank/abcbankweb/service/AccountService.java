@@ -1,14 +1,11 @@
 package com.bank.abcbankweb.service;
 
-import com.bank.abcbankweb.dto.AccountDTO;
+import com.bank.abcbankweb.dto.AccountResponseDto;
 import com.bank.abcbankweb.response.ApiResponse;
+
+import java.util.List;
 
 public interface AccountService {
 
-    ApiResponse createAccount(AccountDTO accountDTO);
-
-    ApiResponse getAllAccounts();
-
-    ApiResponse getAccountByNumber(Long accountNumber);
-
+    ApiResponse<List<AccountResponseDto>> getAccountsByUserId(Long userId);
 }
